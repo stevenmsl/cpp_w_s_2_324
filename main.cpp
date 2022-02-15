@@ -51,6 +51,9 @@ void test1()
   cout << "Test 1 - exepct to see " << toString(get<1>(f)) << endl;
   auto result = Solution::wiggleSort(get<0>(f));
   cout << "result: " << toString(result) << endl;
+  f = testFixture1();
+  result = Solution::wiggleSort2(get<0>(f));
+  cout << "result: " << toString(result) << endl;
 }
 void test2()
 {
@@ -58,11 +61,28 @@ void test2()
   cout << "Test 2 - exepct to see " << toString(get<1>(f)) << endl;
   auto result = Solution::wiggleSort(get<0>(f));
   cout << "result: " << toString(result) << endl;
+  f = testFixture2();
+  result = Solution::wiggleSort2(get<0>(f));
+  cout << "result: " << toString(result) << endl;
+}
+
+void testMapIndex()
+{
+  auto mapIndex = [](int i, int n)
+  {
+    auto odd = n | 1;
+    auto newIndex = (1 + 2 * i) % (odd);
+    return newIndex;
+  };
+  auto n = 6;
+  for (auto i = 0; i < n; i++)
+    cout << to_string(i) << " mapped to " << to_string(mapIndex(i, n)) << endl;
 }
 
 main()
 {
   test1();
   test2();
+  testMapIndex();
   return 0;
 }

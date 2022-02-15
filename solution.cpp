@@ -63,3 +63,130 @@ vector<int> Solution::wiggleSort(vector<int> &nums)
 
   return t;
 }
+
+vector<int> Solution::wiggleSort2(vector<int> &nums)
+{
+  const int n = nums.size();
+  auto median = findMedian(nums).first;
+
+  /*
+    - space(1)
+    - [0,1,2,3,4,5] -> [1,3,5,0,2,4]
+  */
+  auto mapIndex = [n](int i)
+  {
+    /*
+      - n | 1 will find the next odd number
+        if it's even
+      - remains unchanged if it's odd
+      - once it's greater than n|1
+        the new index will become
+        an even number as odd-odd=even
+    */
+    auto newIndex = (1 + 2 * i) % (n | 1);
+    return newIndex;
+  };
+
+  int left = 0, i = 0, right = n - 1;
+
+  while (i <= right)
+  {
+    auto mi = mapIndex(i);
+    auto ml = mapIndex(left);
+    auto mr = mapIndex(right);
+    if (nums[mi] < median)
+    {
+      swap(nums[mr], nums[mi]);
+      right--;
+    }
+    else if (nums[mi] > median)
+    {
+      swap(nums[ml], nums[mi]);
+      left++;
+    }
+    i++;
+  }
+
+  return nums;
+}
+
+/*
+  - nums[left] will be moved to a new location
+    j where on its left are smaller numbers
+    than nums[left] and on its right bigger
+  - Those numbers are not sorted
+  - there are n-j-1 elements after the new
+    location which are all bigger than
+    nums[j], so nums[j] is the n-j th
+    largest number
+*/
+
+int Solution::partition(vector<int> &nums, int left, int right)
+{
+
+  auto i = left, j = right + 1;
+
+  while (true)
+  {
+    /*
+      - find a number that is larger
+        than nums[left]
+    */
+    while (++i < right)
+    {
+      if (nums[i] > nums[left])
+        break;
+    }
+
+    /* do the opposite - find a number
+       than is smaller than nums[left]
+       from the right
+     */
+    while (--j > left)
+    {
+      if (nums[j] < nums[left])
+        break;
+    }
+    if (i >= j)
+      break;
+
+    swap(nums[i], nums[j]);
+  }
+
+  if (nums[left] > nums[j])
+    /* swaps have happened or left is the largest */
+    swap(nums[left], nums[j]);
+  else
+    /* left is the smallest*/
+    return left;
+
+  return j;
+}
+
+pair<int, int> Solution::findMedian(vector<int> &nums)
+{
+  /*
+    - there are k-1 numbers after k
+    - check comments on parition method
+  */
+  auto k = nums.size() - nums.size() / 2;
+  int lo = 0, hi = nums.size() - 1;
+  while (lo < hi)
+  {
+    auto j = partition(nums, lo, hi);
+    /*
+      - don't overthink this; j and k are
+        just indexes
+      - this just means I need fewer
+        numbers after than j has
+        right now
+    */
+    if (j < k)
+      lo = j + 1;
+    else if (j > k)
+      hi = j - 1;
+    else
+      break;
+  }
+  return make_pair(nums[k], k);
+}

@@ -13,9 +13,13 @@ namespace sol324
 {
   class Solution
   {
+  private:
+    static pair<int, int> findMedian(vector<int> &nums);
+    static int partition(vector<int> &nums, int high, int right);
+
   public:
     static vector<int> wiggleSort(vector<int> &nums);
-   
+    static vector<int> wiggleSort2(vector<int> &nums);
   };
 
 }
