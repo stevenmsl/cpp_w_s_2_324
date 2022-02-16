@@ -21,7 +21,16 @@ using namespace std;
     - [1,1,2,2,2] sorted
     - break it down to two parts: [1,1] and [2,2,2]
       to form the foundation of the navive solution
-
+  - for the more advanced solution
+    - partition is very easy to get wrong if you
+      don't consider the edge cases carefully
+      - check the comments on the method
+    - once you got the partition right, finding
+      median should be easier
+    - to achieve space O(1), you need to know
+      some trickery of re-mapping the index
+      - formula: (1 + 2 * i) % (n | 1)
+      - re-mapping: [0,1,2,3,4,5] -> [1,3,5,0,2,4]
 */
 
 /* naive solution */
@@ -87,24 +96,27 @@ vector<int> Solution::wiggleSort2(vector<int> &nums)
     return newIndex;
   };
 
-  int left = 0, i = 0, right = n - 1;
+  int left = 0, right = n - 1;
 
-  while (i <= right)
+  while (left < right)
   {
-    auto mi = mapIndex(i);
     auto ml = mapIndex(left);
     auto mr = mapIndex(right);
-    if (nums[mi] < median)
-    {
-      swap(nums[mr], nums[mi]);
-      right--;
-    }
-    else if (nums[mi] > median)
-    {
-      swap(nums[ml], nums[mi]);
-      left++;
-    }
-    i++;
+
+    /*
+      - the ml will start with the odd-indexed position
+        and mr even-indexed position
+      - so as long as we swap the ml and mr until we
+        can't we are good
+      - this is because we already know that we have
+        broken the nums into two parts with the smaller
+        numbers on the left of the median larger on
+        the right
+    */
+    if (nums[ml] < median)
+      swap(nums[ml], nums[mr]);
+    left++;
+    right--;
   }
 
   return nums;

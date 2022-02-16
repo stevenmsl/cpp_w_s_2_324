@@ -83,6 +83,6 @@ main()
 {
   test1();
   test2();
-  testMapIndex();
+  // testMapIndex();
   return 0;
 }
