@@ -28,7 +28,7 @@ using namespace std;
     - once you got the partition right, finding
       median should be easier
     - to achieve space O(1), you need to know
-      some trickery of re-mapping the index
+      some trickery of re-mapping the indexes
       - formula: (1 + 2 * i) % (n | 1)
       - re-mapping: [0,1,2,3,4,5] -> [1,3,5,0,2,4]
 */
